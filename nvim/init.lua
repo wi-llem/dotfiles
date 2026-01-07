@@ -35,8 +35,8 @@ vim.api.nvim_set_hl(0, "NvimTreeWinSeparator", { fg = "#333333" })
 vim.api.nvim_set_hl(0, "NvimTreeGitFileIgnoredHL", { fg = "#aaaaaa", italic = true })
 vim.api.nvim_set_hl(0, "NvimTreeGitFileDirtyHL", { fg = "#ddbb44" })
 vim.api.nvim_set_hl(0, "", { bg = "#1e1e1e" })
-vim.api.nvim_set_hl(0, '@function.ruby', {bold = true})
-vim.api.nvim_set_hl(0, '@lsp.typemod.class.declaration.ruby', {bold = true})
+vim.api.nvim_set_hl(0, '@function.ruby', { bold = true })
+vim.api.nvim_set_hl(0, '@lsp.typemod.class.declaration.ruby', { bold = true })
 vim.g.loaded_netrw = 1
 vim.g.loaded_netrwPlugin = 1
 vim.opt.termguicolors = true
@@ -184,18 +184,26 @@ vim.api.nvim_set_option("clipboard", "unnamedplus")
 vim.keymap.set('n', '<Tab>', ':bnext<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<S-Tab>', ':bprev<CR>', { noremap = true, silent = true })
 vim.keymap.set('n', '<leader>t', ':NvimTreeToggle<CR>', { noremap = true })
-vim.keymap.set('t', '<Esc>', ':ToggleTerm<CR>', { noremap = true })
+vim.keymap.set('t', '<esc>', [[<C-\><C-n>]], {buffer = 0})
 vim.keymap.set('n', '<leader>fb', require('telescope.builtin').buffers)
 vim.keymap.set('n', '<leader>ff', require('telescope.builtin').find_files)
 vim.keymap.set('n', '<leader>fs', require('telescope.builtin').live_grep)
+vim.keymap.set('n', '<leader>fh', require('telescope.builtin').help_tags)
+vim.keymap.set('n', '<leader>fm', require('telescope.builtin').man_pages)
 vim.keymap.set('n', '<leader>fw', require('telescope.builtin').grep_string)
-vim.keymap.set('n', '<leader>fe', function ()
-  require('telescope.builtin').live_grep({glob_pattern = "!**/spec/**"})
+vim.keymap.set('n', '<leader>few', function()
+  require('telescope.builtin').grep_string({ glob_pattern = "!**/spec/**" })
+end)
+vim.keymap.set('n', '<leader>fe', function()
+  require('telescope.builtin').live_grep({ glob_pattern = "!**/spec/**" })
 end)
 vim.keymap.set('n', '<leader>to', ':Neotest output-panel<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>ts', ':Neotest summary<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>tn', 'require("neotest").run.run()<CR>', { noremap = true })
 vim.keymap.set('n', '<leader>tf', 'require("neotest").run.run(vim.fn.expand("%"))<CR>', { noremap = true })
+vim.keymap.set('n', '<leader>l', function()
+  vim.o.relativenumber = not vim.o.relativenumber
+end)
 
 vim.o.ignorecase = true
 vim.o.smartcase = true
@@ -234,3 +242,10 @@ vim.api.nvim_create_user_command("Test", function()
   vim.cmd("Neotest run")
 end, {}
 )
+
+--Use <C-J> to accept copilot suggestions
+vim.keymap.set('i', '<C-J>', 'copilot#Accept("\\<CR>")', {
+  expr = true,
+  replace_keycodes = false
+})
+vim.g.copilot_no_tab_map = true
